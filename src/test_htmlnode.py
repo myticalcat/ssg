@@ -1,6 +1,6 @@
 import unittest
 
-from htmlnode import HTMLNode
+from htmlnode import HTMLNode, LeafNode
 
 
 class TestTextNode(unittest.TestCase):
@@ -36,6 +36,23 @@ class TestTextNode(unittest.TestCase):
         
         self.assertNotEqual(node, node2)
 
+    def test_props_none(self): 
+        self.assertEqual(HTMLNode(props=None).props_to_html(), "")
+
+
+    def test_leaf_to_html_p(self):
+        node = LeafNode("p", "Hello, world!")
+        self.assertEqual(node.to_html(), "<p>Hello, world!</p>")
+
+    def test_leaf_to_html_a(self):
+        node = LeafNode("a", "Hello, world!", {
+            "href" : "mytical.cat"
+        })
+        self.assertEqual(node.to_html(), '<a href="mytical.cat">Hello, world!</a>')
+
+    def test_leaf_to_html_no_value(self):
+        invalid = LeafNode("p", None, {"a":"cat.com"})
+        self.assertRaises(ValueError, invalid.to_html)
 
 if __name__ == "__main__":
     unittest.main()
