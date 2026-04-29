@@ -26,3 +26,29 @@ def text_node_to_html_node(text_node : TextNode) -> HTMLNode:
         } )
 
     return TypeError
+
+
+def split_nodes_delimiter(old_nodes : list, delimiter : str, text_type : TextType):
+    new_nodes = []
+    for node in old_nodes:
+        if node.text_type != TextType.TEXT:
+            new_nodes.append(node)
+            continue
+        
+        partitions = node.text.split(delimiter,)
+        is_text = True
+        for part in partitions:
+            if part == "" and is_text:
+                is_text = False
+                continue
+
+            if is_text:
+                new_nodes.append(TextNode(part, TextType.TEXT))
+                is_text = False
+                continue
+
+            new_nodes.append(TextNode(part, TextType.CODE))
+            is_text = True
+        if is_text:
+            raise ValueError(f"No closing delimited for {node.text}")
+    return new_nodes
