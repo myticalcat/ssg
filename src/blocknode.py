@@ -1,5 +1,7 @@
 from enum import Enum
 import re
+from htmlnode import HTMLNode, ParentNode, LeafNode
+from function_helper import markdown_to_blocks
 
 class BlockType(Enum):
     PAR = "paragraph"
@@ -28,3 +30,72 @@ def block_to_block_type(block : str) -> BlockType:
         return BlockType.O_LIST
     
     return BlockType.PAR
+
+def markdown_to_html_node(markdown : str) -> HTMLNode:
+    blocks = markdown_to_blocks(markdown)
+    childern = []
+    for block in blocks:
+        block_type = block_to_block_type(block)
+        if block_type == BlockType.CODE:
+            childern.append(
+                ParentNode(
+                    "pre",
+                    LeafNode("code", block.strip("```"))
+                )
+            )
+            continue
+
+        if block_type == block_type.HEAD:
+            childern.append(
+                LeafNode(
+                    f"h{block.count("#")}",
+                    block.strip("# ")
+                )
+            )
+            continue
+        
+        if block_type == BlockType.QUOTE:
+            childern.append(
+                LeafNode("blockquote", block.replace(">", ""))
+            )
+
+            continue
+        
+        if block_type == BlockType.U_LIST:
+            childern.append(
+                ParentNode(
+                    "ul",
+                    [
+                        LeafNode(
+                            "li",
+                            val
+                        )
+                        for val in block.split("- ")
+                    ]
+                )
+            )
+
+            continue
+
+        if block_type == BlockType.O_LIST:
+            childern.append(
+                ParentNode(
+                    "ol",
+                    [
+                        LeafNode(
+                            "li",
+                            val
+                        )
+                        for val in [
+                            item.strip(". ")
+                            for item in block.split("\n")
+                        ]
+                    ]
+                )
+            )
+
+            continue
+
+        childern.append(LeafNode('p',))
+    
+    return ParentNode('div', childern)
