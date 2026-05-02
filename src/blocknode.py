@@ -24,7 +24,7 @@ def block_to_block_type(block : str) -> BlockType:
     if block.startswith("-"):
         return BlockType.U_LIST
     
-    if re.findall(r"^[0-9]*\. "):
+    if re.findall(r"^[0-9]*\. ", block):
         return BlockType.O_LIST
     
     return BlockType.PAR
