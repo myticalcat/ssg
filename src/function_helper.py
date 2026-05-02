@@ -47,7 +47,7 @@ def split_nodes_delimiter(old_nodes : list, delimiter : str, text_type : TextTyp
                 is_text = False
                 continue
 
-            new_nodes.append(TextNode(part, TextType.CODE))
+            new_nodes.append(TextNode(part, text_type))
             is_text = True
         if is_text:
             raise ValueError(f"No closing delimited for {node.text}")

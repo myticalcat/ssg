@@ -55,6 +55,27 @@ class TestText2HTML(unittest.TestCase):
             new_nodes
         )
 
-    
+    def test_delimiter_end_incomplete(self):
+        node = TextNode("This is text with a `code block", TextType.TEXT)
+
+        self.assertRaises(
+            ValueError,
+            split_nodes_delimiter,
+            [node], "`", TextType.CODE
+        )
+
+    def test_delimiter_slash(self):
+        node = TextNode("This is text with a \\code block\\ word", TextType.TEXT)
+        new_nodes = split_nodes_delimiter([node], "\\", TextType.BOLD)
+
+        self.assertEqual(
+            [
+                TextNode("This is text with a ", TextType.TEXT),
+                TextNode("code block", TextType.BOLD),
+                TextNode(" word", TextType.TEXT)
+            ],
+            new_nodes
+        )
+
 if __name__ == "__main__":
     unittest.main()
