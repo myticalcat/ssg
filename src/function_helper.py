@@ -1,5 +1,6 @@
 from textnode import TextNode, TextType
 from htmlnode import HTMLNode, LeafNode
+import re
 
 def text_node_to_html_node(text_node : TextNode) -> HTMLNode:
     if text_node.text_type == TextType.BOLD:
@@ -52,3 +53,12 @@ def split_nodes_delimiter(old_nodes : list, delimiter : str, text_type : TextTyp
         if is_text:
             raise ValueError(f"No closing delimited for {node.text}")
     return new_nodes
+
+
+def extract_markdown_images(text: str):
+    result = re.findall(r"!\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
+    return result
+
+def extract_markdown_links(text: str):
+    result = re.findall(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
+    return result
