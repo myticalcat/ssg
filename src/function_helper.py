@@ -102,3 +102,11 @@ def split_nodes_image(nodes):
                 if i == (len(links) - 1):
                     new_nodes.append(TextNode(splitted[1], TextType.TEXT))
     return new_nodes
+
+def text_to_textnodes(text):
+    new_nodes = split_nodes_image([TextNode(text, TextType.TEXT)])
+    new_nodes = split_nodes_link(new_nodes)
+    new_nodes = split_nodes_delimiter(new_nodes, "**", TextType.BOLD)
+    new_nodes = split_nodes_delimiter(new_nodes, "_", TextType.ITALIC)
+    new_nodes = split_nodes_delimiter(new_nodes, "`", TextType.CODE)
+    return new_nodes
