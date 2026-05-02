@@ -1,7 +1,8 @@
 from enum import Enum
 import re
 from htmlnode import HTMLNode, ParentNode, LeafNode
-from function_helper import markdown_to_blocks
+from textnode import TextNode, TextType
+from function_helper import markdown_to_blocks, text_to_textnodes
 
 class BlockType(Enum):
     PAR = "paragraph"
@@ -40,7 +41,7 @@ def markdown_to_html_node(markdown : str) -> HTMLNode:
             childern.append(
                 ParentNode(
                     "pre",
-                    LeafNode("code", block.strip("```"))
+                    [LeafNode("code", block.strip("```").strip()+"\n")]
                 )
             )
             continue
@@ -49,14 +50,14 @@ def markdown_to_html_node(markdown : str) -> HTMLNode:
             childern.append(
                 LeafNode(
                     f"h{block.count("#")}",
-                    block.strip("# ")
+                    process_inline(block.strip("# "))
                 )
             )
             continue
         
         if block_type == BlockType.QUOTE:
             childern.append(
-                LeafNode("blockquote", block.replace(">", ""))
+                LeafNode("blockquote", process_inline(block.replace(">", "")))
             )
 
             continue
@@ -68,9 +69,10 @@ def markdown_to_html_node(markdown : str) -> HTMLNode:
                     [
                         LeafNode(
                             "li",
-                            val
+                            process_inline(val.strip())
                         )
                         for val in block.split("- ")
+                        if val != ""
                     ]
                 )
             )
@@ -84,10 +86,10 @@ def markdown_to_html_node(markdown : str) -> HTMLNode:
                     [
                         LeafNode(
                             "li",
-                            val
+                            process_inline(val)
                         )
                         for val in [
-                            item.strip(". ")
+                            item.split(". ", 1)[1]
                             for item in block.split("\n")
                         ]
                     ]
@@ -95,7 +97,32 @@ def markdown_to_html_node(markdown : str) -> HTMLNode:
             )
 
             continue
-
-        childern.append(LeafNode('p',))
+        
+        if block != "":
+            childern.append(LeafNode('p',process_inline(block)))
     
     return ParentNode('div', childern)
+
+def process_inline(block):
+    block = block.strip().replace("\n"," ")
+    inline_str = ""
+    for node in text_to_textnodes(block):
+        if node.text_type == TextType.TEXT:
+            inline_str += node.text
+            continue
+        if node.text_type == TextType.BOLD:
+            inline_str += f"<b>{node.text}</b>"
+            continue
+        if node.text_type == TextType.CODE:
+            inline_str += f"<code>{node.text}</code>"
+            continue
+        if node.text_type == TextType.ITALIC:
+            inline_str += f"<i>{node.text}</i>"
+            continue
+        if node.text_type == TextType.IMAGE:
+            inline_str += f"<img src=\"{node.url}\" alt=\"{node.text}\">"
+            continue
+        if node.text_type == TextType.LINK:
+            inline_str += f"<a src=\"{node.url}\">{node.text}</a>"
+            continue
+    return inline_str
