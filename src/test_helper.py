@@ -1,6 +1,6 @@
 import unittest
 
-from function_helper import text_node_to_html_node
+from function_helper import text_node_to_html_node, split_nodes_delimiter
 
 from textnode import TextNode, TextType
 from htmlnode import LeafNode
@@ -28,7 +28,33 @@ class TestText2HTML(unittest.TestCase):
             "alt":"cat image"
         })
         self.assertEqual(html_node.to_html(), true_html.to_html())
+    
 
+    def test_delimiter(self):
+        node = TextNode("This is text with a `code block` word", TextType.TEXT)
+        new_nodes = split_nodes_delimiter([node], "`", TextType.CODE)
 
+        self.assertEqual(
+            [
+                TextNode("This is text with a ", TextType.TEXT),
+                TextNode("code block", TextType.CODE),
+                TextNode(" word", TextType.TEXT)
+            ],
+            new_nodes
+        )
+
+    def test_delimiter_end(self):
+        node = TextNode("This is text with a `code block`", TextType.TEXT)
+        new_nodes = split_nodes_delimiter([node], "`", TextType.CODE)
+
+        self.assertEqual(
+            [
+                TextNode("This is text with a ", TextType.TEXT),
+                TextNode("code block", TextType.CODE),
+            ],
+            new_nodes
+        )
+
+    
 if __name__ == "__main__":
     unittest.main()
