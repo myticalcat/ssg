@@ -73,9 +73,7 @@ def split_nodes_link(nodes):
             new_nodes.append(TextNode(text, TextType.TEXT))
             continue
         for i, link in enumerate(links):
-            print(link)
             splitted = text.split(f"[{link[0]}]({link[1]})", 1)
-            print(splitted)
             if splitted[0] != "":
                 new_nodes.append(TextNode(splitted[0], TextType.TEXT))
             new_nodes.append(TextNode(link[0], TextType.LINK, link[1]))
@@ -95,9 +93,7 @@ def split_nodes_image(nodes):
             new_nodes.append(TextNode(text, TextType.TEXT))
             continue
         for i, link in enumerate(links):
-            print(link)
-            splitted = text.split(f"[{link[0]}]({link[1]})", 1)
-            print(splitted)
+            splitted = text.split(f"![{link[0]}]({link[1]})", 1)
             if splitted[0] != "":
                 new_nodes.append(TextNode(splitted[0], TextType.TEXT))
             new_nodes.append(TextNode(link[0], TextType.IMAGE, link[1]))
