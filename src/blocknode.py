@@ -21,7 +21,7 @@ def block_to_block_type(block : str) -> BlockType:
     if block.startswith(">"):
         return BlockType.QUOTE
     
-    if block.startswith("-"):
+    if block.startswith("- "):
         return BlockType.U_LIST
     
     if re.findall(r"^[0-9]*\. ", block):
