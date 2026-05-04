@@ -94,7 +94,7 @@ the **same** even with inline stuff
             "<div><pre><code>This is text that _should_ remain\nthe **same** even with inline stuff\n</code></pre></div>",
         )
 
-    def test_ul(self):
+    def test_ul_html(self):
         md = """- 1
 - 2
 - 3
@@ -107,7 +107,7 @@ the **same** even with inline stuff
             "<div><ul><li>1</li><li>2</li><li>3</li><li>4</li></ul></div>",
         )
 
-    def test_ol(self):
+    def test_ol_html(self):
         md = """1. 1
 2. 2
 3. 3
