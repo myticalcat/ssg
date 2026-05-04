@@ -1,7 +1,7 @@
 from enum import Enum
 import re
 from htmlnode import HTMLNode, ParentNode, LeafNode
-from textnode import TextNode, TextType
+from textnode import TextType
 from function_helper import markdown_to_blocks, text_to_textnodes
 
 class BlockType(Enum):
