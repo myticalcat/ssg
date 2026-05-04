@@ -15,7 +15,11 @@ def generate_contents(content_path = "./content", public_path = "./public"):
         print("no content path dectected!")
         return
     for ls in os.listdir(content_path):
-        generate_page(os.path.join(content_path, ls), "template.html", public_path)
+        fp = os.path.join(content_path, ls)
+        if os.path.isfile(fp): 
+            generate_page(fp, "template.html", public_path)
+        else:
+            generate_contents(fp,os.path.join(public_path, ls))
 
 def copy_recusive(from_path, to_path, is_root = False):
     if is_root and os.path.exists(to_path):
@@ -24,7 +28,7 @@ def copy_recusive(from_path, to_path, is_root = False):
 
     if not os.path.exists(to_path):
         print(f'creaing directory: {to_path}')
-        os.mkdir(to_path)
+        os.makedirs(to_path)
 
     ls = os.listdir(from_path)
 
@@ -44,6 +48,9 @@ def generate_page(from_path, template_path, dest_path):
     title = extract_title(md)
     template = template.replace("{{ Title }}", title)
     template = template.replace("{{ Content }}", content)
+    if not os.path.exists(dest_path):
+        os.makedirs(dest_path)
+        
     with open(os.path.join(dest_path, from_path.split("/")[-1].replace(".md", ".html")), "w", encoding="utf-8") as file:
         file.write(template)
 
