@@ -121,7 +121,7 @@ def markdown_to_blocks(markdown):
     return [s.strip() for s in markdown.split("\n\n")]
 
 def extract_title(markdown):
-    for line in markdown.split(markdown, "\n"):
+    for line in markdown.split("\n"):
         if line.startswith("# "):
-            return line[3:]
+            return line[2:]
     raise ValueError("No H1 header!")

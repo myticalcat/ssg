@@ -1,6 +1,16 @@
 import unittest
 
-from function_helper import text_node_to_html_node, split_nodes_delimiter, extract_markdown_images, extract_markdown_links, split_nodes_image, split_nodes_link, text_to_textnodes, markdown_to_blocks
+from function_helper import (
+    text_node_to_html_node,
+    split_nodes_delimiter,
+    extract_markdown_images,
+    extract_markdown_links,
+    split_nodes_image,
+    split_nodes_link,
+    text_to_textnodes,
+    markdown_to_blocks,
+    extract_title
+)
 
 from textnode import TextNode, TextType
 from htmlnode import LeafNode
@@ -214,5 +224,38 @@ This is the same paragraph on a new line
                 "- This is a list\n- with items",
             ],
         )
+
+    def test_extract_title(self):
+        self.assertEqual(
+            "title",
+            extract_title("# title")
+        )
+
+    def test_extract_title_below(self):
+        self.assertEqual(
+            "title",
+            extract_title("""something
+
+# title""")
+        )
+
+    def test_extract_title_h2_below(self):
+        self.assertEqual(
+            "title",
+            extract_title("""something something
+## not title
+# title""")
+        )
+
+    def test_extract_not_title(self):
+        self.assertRaises(
+            ValueError,
+            extract_title,
+"""something something
+## not title
+
+#title"""
+        )
+
 if __name__ == "__main__":
     unittest.main()
