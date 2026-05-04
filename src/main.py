@@ -1,4 +1,3 @@
-from textnode import TextNode, TextType
 import os
 import shutil
 
@@ -29,4 +28,3 @@ def copy_recusive(from_path, to_path, is_root = False):
 
 if __name__ == "__main__":
     copy_static()
-    # print(TextNode("hello",TextType.LINK, "mytical.cat"))
