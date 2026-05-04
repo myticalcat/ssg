@@ -1,14 +1,18 @@
 import os
 import shutil
+import sys
 from pathlib import Path
 from blocknode import markdown_to_html_node 
 from function_helper import extract_title
 
-def copy_static():
-    if not os.path.exists("./static"):
+basepath = sys.argv[1]
+print(f"basepath is {basepath}")
+
+def copy_static(static_path = "./static", public_path = "./public"):
+    if not os.path.exists(static_path):
         print("no static path dectected!")
         return
-    copy_recusive("./static", "./public", True)
+    copy_recusive(static_path, public_path, True)
 
 def generate_contents(content_path = "./content", public_path = "./public"):
     if not os.path.exists(content_path):
@@ -48,6 +52,7 @@ def generate_page(from_path, template_path, dest_path):
     title = extract_title(md)
     template = template.replace("{{ Title }}", title)
     template = template.replace("{{ Content }}", content)
+    template = template.replace('href="/', f'href="{basepath}').replace('src="/', f'src="{basepath}')
     if not os.path.exists(dest_path):
         os.makedirs(dest_path)
         
@@ -56,5 +61,5 @@ def generate_page(from_path, template_path, dest_path):
 
 
 if __name__ == "__main__":
-    copy_static()
-    generate_contents()
+    copy_static(public_path="./docs")
+    generate_contents(public_path="./docs")
