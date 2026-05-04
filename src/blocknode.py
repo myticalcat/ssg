@@ -123,6 +123,6 @@ def process_inline(block):
             inline_str += f"<img src=\"{node.url}\" alt=\"{node.text}\">"
             continue
         if node.text_type == TextType.LINK:
-            inline_str += f"<a src=\"{node.url}\">{node.text}</a>"
+            inline_str += f"<a href=\"{node.url}\">{node.text}</a>"
             continue
     return inline_str
