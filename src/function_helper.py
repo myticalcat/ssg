@@ -120,3 +120,8 @@ def text_to_textnodes(text):
 def markdown_to_blocks(markdown):
     return [s.strip() for s in markdown.split("\n\n")]
 
+def extract_title(markdown):
+    for line in markdown.split(markdown, "\n"):
+        if line.startswith("# "):
+            return line[3:]
+    raise ValueError("No H1 header!")
